@@ -1,17 +1,5 @@
 PRACTICAL NO. 5: Working with URL Routing and Dependency Injection
 
-Question 1: Create an ASP.NET Core Web API application named RoutingDIExample and configure it to use
-controllers.
-1. Open Visual Studio 2026.
-2. Select Create a new project.
-3. Search for ASP.NET Core Web API.
-4. Select ASP.NET Core Web API and click Next.
-5. Set Project name to RoutingDIExample.
-6. Choose a suitable Location and keep the Solution name as RoutingDIExample.
-7. Click Next.
-8. Select .NET 10.0 (LTS), Authentication type: None, Configure for HTTPS: Yes, Enable OpenAPI support: Yes, and
-Use controllers: Yes.
-9. Click Create.
 File: Program.cs
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
