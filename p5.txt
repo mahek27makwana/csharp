@@ -1,20 +1,5 @@
 # Practical No. 5: Implementing Security in ASP.NET Core MVC
 
-### Aim
-To develop an **ASP.NET Core MVC web application** using **ASP.NET Core Identity** to implement user registration, login, logout, authentication, and role-based authorization.
-
-### Expected Features
-
-1. User Registration
-2. User Login
-3. User Logout
-4. Protected Dashboard
-5. Admin and User roles
-6. Admin-only page
-7. Public page accessible without login
-
----
-
 # 1. Create Project
 
 Open **Visual Studio 2026**.
@@ -52,9 +37,6 @@ Run:
 ```powershell
 Install-Package Microsoft.EntityFrameworkCore.Sqlite
 Install-Package Microsoft.EntityFrameworkCore.Tools
-```
-
----
 
 # 3. Create ApplicationDbContext
 
@@ -62,7 +44,6 @@ Create:
 
 ```text
 Data/ApplicationDbContext.cs
-```
 
 ```csharp
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -79,9 +60,6 @@ namespace SecurityApp.Data
         }
     }
 }
-```
-
----
 
 # 4. Configure Database
 
@@ -90,17 +68,12 @@ Open:
 ```text
 appsettings.json
 ```
-
 Add:
 
 ```json
 "ConnectionStrings": {
   "DefaultConnection": "Data Source=security.db"
 }
-```
-
----
-
 # 5. Configure Identity in `Program.cs`
 
 Use:
@@ -140,19 +113,7 @@ app.MapRazorPages();
 
 app.Run();
 ```
-
-### Important
-
-These two lines are required for security:
-
-```csharp
-app.UseAuthentication();
-app.UseAuthorization();
-```
-
----
-
-# 6. Create Database
+ 6. Create Database
 
 Open **Package Manager Console**.
 
@@ -167,9 +128,6 @@ This creates the Identity tables in:
 
 ```text
 security.db
-```
-
----
 
 # 7. Create Home Controller
 
@@ -202,9 +160,6 @@ namespace SecurityApp.Controllers
         }
     }
 }
-```
-
----
 
 # 8. Protect Dashboard
 
@@ -236,24 +191,6 @@ namespace SecurityApp.Controllers
         }
     }
 }
-```
-
-### Meaning
-
-```csharp
-[Authorize]
-```
-
-Only logged-in users can access the page.
-
-```csharp
-[Authorize(Roles = "Admin")]
-```
-
-Only users having the **Admin** role can access the page.
-
----
-
 # 9. Create Views
 
 Create:
@@ -272,9 +209,6 @@ Views/Home/Index.cshtml
 <a asp-action="Dashboard">Dashboard</a>
 <br>
 <a asp-action="Admin">Admin Page</a>
-```
-
----
 
 ## 10. Dashboard View
 
@@ -370,42 +304,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-```
-
----
-
-# 13. Registration and Login
-
-Because we selected:
-
-```text
-Individual Accounts
-```
-
-ASP.NET Core Identity provides ready-made pages for:
-
-```text
-Register
-Login
-Logout
-```
-
-They are available through the Identity UI.
-
-Typical URLs:
-
-```text
-/Identity/Account/Register
-/Identity/Account/Login
-```
-
-After registration, the user can log in and access:
-
-```text
-Dashboard
-```
-
----
 
 # 14. Project Structure
 
@@ -427,144 +325,4 @@ SecurityApp
 ├── appsettings.json
 ├── Program.cs
 └── security.db
-```
 
----
-
-# 15. Testing the Application
-
-### Test 1: Public Page
-
-Open:
-
-```text
-/
-```
-
-Result:
-
-```text
-Welcome to Security App
-
-This page is available to everyone.
-```
-
-No login required.
-
-### Test 2: Dashboard
-
-Open:
-
-```text
-/Home/Dashboard
-```
-
-If the user is **not logged in**, ASP.NET Core Identity redirects the user to the login page.
-
-After login:
-
-```text
-User Dashboard
-
-Welcome! You are logged in.
-```
-
-### Test 3: Admin Page
-
-Open:
-
-```text
-/Home/Admin
-```
-
-- **Admin user → Access allowed**
-- **Normal User → Access denied**
-
----
-
-# Security Flow
-
-```text
-User
-  ↓
-Register
-  ↓
-Login
-  ↓
-Authentication
-  ↓
-Dashboard
-  ↓
-Check Role
-  ↓
-Admin ──────→ Admin Page
-  │
-User ───────→ Access Denied
-```
-
----
-
-## Important Code for Exam
-
-Remember these 3 important parts:
-
-### Authentication
-
-```csharp
-app.UseAuthentication();
-app.UseAuthorization();
-```
-
-### Login protection
-
-```csharp
-[Authorize]
-```
-
-### Admin protection
-
-```csharp
-[Authorize(Roles = "Admin")]
-```
-
----
-
-## Result
-
-**Thus, an ASP.NET Core MVC application was successfully developed using ASP.NET Core Identity. User registration, login, logout, authentication, protected dashboard, Admin/User roles, and role-based authorization were successfully implemented and tested.**
-
-### Viva Questions
-
-**1. What is ASP.NET Core Identity?**  
-It is a framework for implementing user authentication and authorization.
-
-**2. What is authentication?**  
-Authentication verifies **who the user is**.
-
-**3. What is authorization?**  
-Authorization determines **what the user is allowed to access**.
-
-**4. What does `[Authorize]` do?**  
-It restricts access to authenticated users.
-
-**5. What does `[Authorize(Roles = "Admin")]` do?**  
-It allows only users having the **Admin** role.
-
-**6. What are the two roles in this practical?**  
-`Admin` and `User`.
-
-**7. What is logout?**  
-Logout ends the user's authenticated session.
-
-**8. What is IdentityRole?**  
-It represents a role such as **Admin** or **User**.
-
-**9. What database is used?**  
-SQLite.
-
-**10. What is the difference between authentication and authorization?**
-
-```text
-Authentication → Who are you?
-Authorization  → What can you access?
-```
