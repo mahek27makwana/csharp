@@ -20,26 +20,6 @@ CalculatorTesting
 │
 └── UnitTest1.cs
 
-1. Aim
-To create an ASP.NET Core application and a separate xUnit Testing Project using Visual
-Studio 2026, and perform unit testing of application methods using test cases.
-
-2. Learning Objectives
-After completing this practical, students will be able to:
- Create an ASP.NET Core project in Visual Studio 2026.
- Create a separate unit testing project.
- Add a project reference between projects.
- Create and test C# methods using xUnit.
- Use [Fact] and assertion methods.
- Execute test cases using Test Explorer.
- Identify passed and failed test cases.
-
-3. Software Requirements
- Visual Studio 2026
- .NET SDK
- C#
- xUnit Testing Framework
-
 4. Procedure
 Step 1: Open Visual Studio 2026
 1. Start Visual Studio 2026.
@@ -104,17 +84,6 @@ return (double)a / b;
 }
 }
 }
-Explanation
-The CalculatorService contains four methods:
-
-Method Purpose
-
-Add() Adds two numbers
-Subtract() Subtracts two numbers
-
-Multiply() Multiplies two numbers
-Divide() Divides two numbers
-The Divide() method also checks whether the second number is zero.
 
 6. Create the Testing Project
 Step 5: Add xUnit Test Project
@@ -143,7 +112,6 @@ CalculatorTesting
 └── UnitTest1.cs
 
 7. Add Project Reference
-The testing project must be able to access the CalculatorService class.
 Step 6: Add Reference to Main Project
 1. Right-click:
 CalculatorAPI.Tests
@@ -221,37 +189,6 @@ Assert.Throws&lt;DivideByZeroException&gt;(
 }
 }
 
-9. Understanding the Test Case
-Each test follows the Arrange – Act – Assert (AAA) pattern.
-For example:
-[Fact]
-public void Add_TwoNumbers_ReturnsCorrectResult()
-{
-// Arrange
-CalculatorService calculator = new CalculatorService();
-// Act
-int result = calculator.Add(10, 20);
-// Assert
-Assert.Equal(30, result);
-}
-Arrange
-Creates the object required for testing.
-CalculatorService calculator = new CalculatorService();
-Act
-Calls the method being tested.
-int result = calculator.Add(10, 20);
-Assert
-Compares the actual result with the expected result.
-Assert.Equal(30, result);
-
-10. Understanding
-[Fact]
-The [Fact] attribute identifies a method as an xUnit test method.
-Example:
-[Fact]
-public void Add_TwoNumbers_ReturnsCorrectResult()
-When the test project is executed, xUnit discovers methods marked with [Fact] and executes
-them.
 
 11. Run the Testing Project
 Step 8: Open Test Explorer
