@@ -1,16 +1,5 @@
 # Practical No. 4: Creating Application Using Cart
 
-### Aim
-To create a simple **Shopping Cart web application** using ASP.NET Core MVC where users can view products, add products to the cart, and view the cart.
-
-### Requirements
-- Visual Studio 2026
-- ASP.NET Core MVC
-- C#
-- Razor Views
-
----
-
 ## 1. Create Project
 
 Open **Visual Studio 2026** → **Create a new project** → select:
@@ -47,9 +36,6 @@ namespace ShoppingCart.Models
         public double Price { get; set; }
     }
 }
-```
-
----
 
 # 3. Create Cart Controller
 
@@ -109,9 +95,6 @@ namespace ShoppingCart.Controllers
         }
     }
 }
-```
-
----
 
 # 4. Create Product View
 
@@ -143,10 +126,6 @@ Views/Cart/Index.cshtml
 }
 
 <a asp-action="Cart">View Cart</a>
-```
-
----
-
 # 5. Create Cart View
 
 Create:
@@ -173,9 +152,6 @@ Views/Cart/Cart.cshtml
 <h3>Total: ₹@Model.Sum(x => x.Price)</h3>
 
 <a asp-action="Index">Continue Shopping</a>
-```
-
----
 
 # 6. Change `Program.cs`
 
@@ -196,10 +172,6 @@ app.MapControllerRoute(
     pattern: "{controller=Cart}/{action=Index}/{id?}");
 
 app.Run();
-```
-
----
-
 # 7. Project Structure
 
 ```text
@@ -241,50 +213,5 @@ Mobile - ₹20000       Add to Cart
 Headphones - ₹2000    Add to Cart
 
 View Cart
-```
 
-After clicking **Add to Cart**:
 
-```text
-Shopping Cart
-
-Laptop - ₹50000       Remove
-Mobile - ₹20000       Remove
-
-Total: ₹70000
-
-Continue Shopping
-```
-
----
-
-## Result
-
-**Thus, a simple Shopping Cart application was successfully created using ASP.NET Core MVC, allowing users to view products, add products to the cart, remove products, and calculate the total price.**
-
-### Viva Questions
-
-**1. What is a shopping cart?**  
-A shopping cart stores products selected by the user for purchase.
-
-**2. What is MVC?**  
-MVC stands for **Model, View and Controller**.
-
-**3. What is the Model used for?**  
-The Model represents the application's data.
-
-**4. What does `Add()` do?**  
-It adds the selected product to the cart.
-
-**5. What does `Remove()` do?**  
-It removes a product from the cart.
-
-**6. How is the total calculated?**
-
-```csharp
-Model.Sum(x => x.Price)
-```
-
-It adds the prices of all products in the cart.
-
-Would you like me to convert this into a shorter practical-record format with only the aim, code, result, and viva questions?
