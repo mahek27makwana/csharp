@@ -1,10 +1,4 @@
 Practical No. 10: Razor Pages and Tag Helpers
-Aim
-To create an ASP.NET Core Razor Pages application and demonstrate the use of Razor syntax and Tag Helpers to display and submit student information.
-Requirements
-- Visual Studio 2026
-- ASP.NET Core Razor Pages
-- C#
 1. Create Project
 Open Visual Studio 2026.
 Select:
