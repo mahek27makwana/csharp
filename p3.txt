@@ -1,17 +1,5 @@
 # Practical No. 3: CRUD Application using ASP.NET Core MVC
 
-### Aim
-To create an **ASP.NET Core MVC web application** that performs CRUD operations on student data using **Entity Framework Core and SQLite** in Visual Studio 2026.
-
-### Requirements
-- Visual Studio 2026
-- ASP.NET Core MVC
-- Entity Framework Core
-- SQLite
-- Razor Views
-
----
-
 ## 1. Create the Project
 
 Open **Visual Studio 2026**.
@@ -489,49 +477,4 @@ https://localhost:xxxx/Students
 | **Delete** | Remove a student |
 | **Details** | Display complete student information |
 
-### Sample Output
 
-```text
-Student List
-
----------------------------------------------------------
-Id   Name    Email             Age   Course    Actions
----------------------------------------------------------
-1    Mahek   mahek@gmail.com   20    BCA       Details Edit Delete
-2    Rahul   rahul@gmail.com   21    BCA       Details Edit Delete
----------------------------------------------------------
-
-                 Add Student
-```
-
-### Result
-
-**Thus, an ASP.NET Core MVC application for managing student records was successfully created using Entity Framework Core and SQLite, and CRUD operations were successfully performed.**
-
-### Important Viva Questions
-
-**1. What is CRUD?**  
-CRUD stands for **Create, Read, Update and Delete**.
-
-**2. What is MVC?**  
-MVC stands for **Model, View and Controller**.
-
-**3. What is Entity Framework Core?**  
-It is an ORM that allows .NET applications to work with databases using C# objects.
-
-**4. Why is SQLite used?**  
-SQLite is a lightweight database that stores data in a single database file.
-
-**5. What is Razor?**  
-Razor is a syntax used in ASP.NET Core to combine C# code with HTML in `.cshtml` views.
-
-**6. What does `DbSet<Student>` represent?**  
-It represents the **Students table** in the database.
-
-**7. What does `SaveChangesAsync()` do?**  
-It saves changes made to the database.
-
-**8. What is `Add-Migration`?**  
-It creates a migration containing changes to the database structure.
-
-Would you like a shorter handwritten exam version with only the essential files and commands?
