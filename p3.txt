@@ -1,678 +1,537 @@
-Practical no 3: Creating Applications with Data (CRUD) using ASP.NET Core MVC
+# Practical No. 3: CRUD Application using ASP.NET Core MVC
 
-3. Application Architecture
-The application follows the MVC architecture:
-ASP.NET Core MVC
-|
-+------------+------------+
-| | |
-Model     Controller        View
+### Aim
+To create an **ASP.NET Core MVC web application** that performs CRUD operations on student data using **Entity Framework Core and SQLite** in Visual Studio 2026.
 
-|                   |                      |
-|                    |                     |
-Student.cs StudentsController .cshtml
-| |
-+----- Entity Framework -----+
-|
-v
-SQLite Database
+### Requirements
+- Visual Studio 2026
+- ASP.NET Core MVC
+- Entity Framework Core
+- SQLite
+- Razor Views
 
-Step 1: Open Visual Studio 2026
-Start:
-Visual Studio 2026
-Select:
-Create a new project
+---
 
-Step 2: Search for MVC
-In the search box, type:
-ASP.NET Core Web App (Model-View-Controller)
-Select:
-ASP.NET Core Web App (Model-View-Controller)
-Click:
-Next
+## 1. Create the Project
 
-Step 3: Enter Project Information
+Open **Visual Studio 2026**.
 
-Use the following details:
-Property Value
-Project Name StudentCRUDApp
-Solution
-Name StudentCRUDApp
-Location Any suitable
-folder
+1. Select **Create a new project**.
+2. Select **ASP.NET Core Web App (Model-View-Controller)**.
+3. Click **Next**.
+4. Project Name: `StudentCRUD`
+5. Select the latest available **.NET** version.
+6. Click **Create**.
 
-Click:
-Next
+---
 
-Step 4: Additional Information
-Select the latest stable .NET version available in Visual Studio 2026.
-Use:
-Authentication Type: None
-Configure for HTTPS: Checked
-Enable Docker: Unchecked
-Click:
-Create
-Visual Studio will create the MVC project.
+# 2. Install NuGet Packages
 
-StudentCRUDApp
-│
-├── Controllers
-
-│ └── HomeController.cs
-│
-├── Models
-│
-├── Views
-│ ├── Home
-│ │ ├── Index.cshtml
-│ │ └── Privacy.cshtml
-│ │
-│ └── Shared
-│
-├── wwwroot
-│
-├── appsettings.json
-├── Program.cs
-└── StudentCRUDApp.csproj
-
-Step 5: Open NuGet Package Manager
-In Visual Studio:
-Tools
-↓
-NuGet Package Manager
-
-↓
-Manage NuGet Packages for Solution
-Select:
-Browse
-Search for:
-Microsoft.EntityFrameworkCore.Sqlite
-Install the latest stable version compatible with the .NET version
-Practical no 3: Creating Applications with Data (CRUD) using ASP.NET Core MV
-
-4. Create the MVC Project
-Step 1: Open Visual Studio 2026
-Start:
-Visual Studio 2026
-Select:
-Create a new project
-5. Select Project Template
-Step 2: Search for MVC
-In the search box, type:
-ASP.NET Core Web App (Model-View-Controller)
-Select:
-ASP.NET Core Web App (Model-View-Controller)
-Click:
-Next
-This is the MVC project template used for applications based on Controllers and Views.
-(Microsoft Learn)
-6. Configure the Project
-Step 3: Enter Project Information
-Use the following details:
-Property Value
-Project Name StudentCRUDApp
-Solution
-Name
-StudentCRUDApp
-Location Any suitable
-folder
-Click:
-Next
-7. Configure Framework
-Step 4: Additional Information
-Select the latest stable .NET version available in Visual Studio 2026.
-Use:
-Authentication Type: None
-Configure for HTTPS: Checked
-Enable Docker: Unchecked
-Click:
-Create
-Visual Studio will create the MVC project.
-8. Initial Project Structure
-After creating the project, Solution Explorer will look similar to:
-StudentCRUDApp
-│
-├── Controllers
-│ └── HomeController.cs
-│
-├── Models
-│
-├── Views
-│ ├── Home
-│ │ ├── Index.cshtml
-│ │ └── Privacy.cshtml
-│ │
-│ └── Shared
-│
-├── wwwroot
-│
-├── appsettings.json
-├── Program.cs
-└── StudentCRUDApp.csproj
-9. Install Entity Framework Core
-
-Step 5: Open NuGet Package Manager
-In Visual Studio:
-Tools
- ↓
-NuGet Package Manager
- ↓
-Manage NuGet Packages for Solution
-Select:
-Browse
-Search for:
-Microsoft.EntityFrameworkCore.Sqlite
-
-10. Install Entity Framework Core Tools
-Search for and install:
-Microsoft.EntityFrameworkCore.Tools
-
-11. Install Design Package
-Install:
-Microsoft.EntityFrameworkCore.Design
-Therefore, the project should have these important packages:
-Microsoft.EntityFrameworkCore.Sqlite
-Microsoft.EntityFrameworkCore.Tools
-Microsoft.EntityFrameworkCore.Design
-
-12. Create the Model
-Step 6: Create Models Folder
-If the Models folder already exists, use it.
-Otherwise:
-Right-click Project
- ↓
-Add
- ↓
-New Folder
-Name it:
-Models
-13. Create Student Model
-Step 7: Add Student.cs
-Right-click:
-Models
-Select:
-Add
- ↓
-Class
-Name the class:
-Student.cs
-The following file is created:
-Models/Student.cs
-14. Code for Student.cs
-Replace the contents with:
-using System.ComponentModel.DataAnnotations;
-namespace StudentCRUDApp.Models
-{
- public class Student
- {
- public int Id { get; set; }
- [Required]
- [Display(Name = "Roll Number")]
- public int RollNo { get; set; }
- [Required]
- [Display(Name = "Student Name")]
- public string Name { get; set; } = string.Empty;
- [Required]
- public string Course { get; set; } = string.Empty;
- [Required]
- [Range(0, 100)]
- public int Marks { get; set; }
- [Required]
- public string City { get; set; } = string.Empty;
- }
-}
-
-16. Create Data Folder
-Step 8: Create Data Folder
-Right-click the project:
-Add
- ↓
-New Folder
-Name it:
-Data
-The project now contains:
-StudentCRUDApp
-│
-├── Controllers
-├── Models
-├── Data
-├── Views
-└── wwwroot
-17. Create Database Context
-Step 9: Add StudentContext.cs
-Right-click:
-Data
-Select:
-Add
- ↓
-Class
-Name it:
-StudentContext.cs
-The following file is created:
-Data/StudentContext.cs
-18. Code for StudentContext.cs
-Replace the contents with:
-using Microsoft.EntityFrameworkCore;
-using StudentCRUDApp.Models;
-namespace StudentCRUDApp.Data
-{
- public class StudentContext : DbContext
- {
- public StudentContext(DbContextOptions<StudentContext> options)
- : base(options)
- {
- }
- public DbSet<Student> Students { get; set; }
- }
-}
-
-20. Configure SQLite Connection
-Step 10: Open appsettings.json
-Open:
-appsettings.json
-Add the following connection string:
-{
- "ConnectionStrings": {
- "StudentConnection": "Data Source=StudentDatabase.db"
- },
- "Logging": {
- "LogLevel": {
- "Default": "Information",
- "Microsoft.AspNetCore": "Warning"
- }
- },
- "AllowedHosts": "*"
-}
-
-21. Configure Entity Framework Core in Program.cs
-Step 11: Open Program.cs
-Open:
-Program.cs
-Replace the contents with:
-using Microsoft.EntityFrameworkCore;
-using StudentCRUDApp.Data;
-var builder = WebApplication.CreateBuilder(args);
-// Add MVC services
-builder.Services.AddControllersWithViews();
-// Configure Entity Framework Core with SQLite
-builder.Services.AddDbContext<StudentContext>(options =>
- options.UseSqlite(
- builder.Configuration.GetConnectionString("StudentConnection")
- ));
-var app = builder.Build();
-// Configure HTTP request pipeline
-if (!app.Environment.IsDevelopment())
-{
- app.UseExceptionHandler("/Home/Error");
- app.UseHsts();
-}
-app.UseHttpsRedirection();
-app.UseRouting();
-app.UseAuthorization();
-app.MapStaticAssets();
-app.MapControllerRoute(
- name: "default",
- pattern: "{controller=Students}/{action=Index}/{id?}");
-app.Run();
-
-22. Create the Database
-We will now use EF Core migrations to create the database table.
-Step 12: Open Package Manager Console
 Go to:
-Tools
- ↓
-NuGet Package Manager
- ↓
-Package Manager Console
-The Package Manager Console appears at the bottom of Visual Studio.
-23. Create Migration
-In Package Manager Console, enter:
+
+**Tools → NuGet Package Manager → Package Manager Console**
+
+Run:
+
+```powershell
+Install-Package Microsoft.EntityFrameworkCore.Sqlite
+Install-Package Microsoft.EntityFrameworkCore.Tools
+```
+
+---
+
+# 3. Create Model
+
+Create:
+
+```text
+Models/Student.cs
+```
+
+### `Student.cs`
+
+```csharp
+using System.ComponentModel.DataAnnotations;
+
+namespace StudentCRUD.Models
+{
+    public class Student
+    {
+        public int Id { get; set; }
+
+        [Required]
+        public string Name { get; set; }
+
+        [Required]
+        public string Email { get; set; }
+
+        public int Age { get; set; }
+
+        public string Course { get; set; }
+    }
+}
+```
+
+---
+
+# 4. Create Database Context
+
+Create:
+
+```text
+Data/ApplicationDbContext.cs
+```
+
+### `ApplicationDbContext.cs`
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+using StudentCRUD.Models;
+
+namespace StudentCRUD.Data
+{
+    public class ApplicationDbContext : DbContext
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
+
+        public DbSet<Student> Students { get; set; }
+    }
+}
+```
+
+---
+
+# 5. Add SQLite Connection
+
+Open:
+
+```text
+appsettings.json
+```
+
+Add:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Data Source=students.db"
+}
+```
+
+---
+
+# 6. Configure Database
+
+Open:
+
+```text
+Program.cs
+```
+
+Add:
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+using StudentCRUD.Data;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
+
+var app = builder.Build();
+
+app.UseStaticFiles();
+app.UseRouting();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Students}/{action=Index}/{id?}");
+
+app.Run();
+```
+
+---
+
+# 7. Create Database
+
+Open:
+
+**Tools → NuGet Package Manager → Package Manager Console**
+
+Run:
+
+```powershell
 Add-Migration InitialCreate
-Press:
-Enter
-EF Core will create a new folder:
-Migrations
-The structure will look similar to:
-Migrations
-│
-├── 2026xxxxxxxxxxxx_InitialCreate.cs
-├── 2026xxxxxxxxxxxx_InitialCreate.Designer.cs
-└── StudentContextModelSnapshot.cs
-The exact migration filenames depend on the date and time when the migration is created.
-
-
-
-24. Apply Migration
-In Package Manager Console, execute:
 Update-Database
-This creates:
-StudentDatabase.db
-and the required database table.
-25. Database Structure
-The database will contain a table similar to:
-Students
-------------------------------------------------
-Id INTEGER Primary Key
-RollNo INTEGER
-Name TEXT
-Course TEXT
-Marks INTEGER
-City TEXT
-------------------------------------------------
+```
 
-Step 13: Add Scaffolded Controller
-Right-click:
-Controllers
-Select:
-Add
- ↓
-New Scaffolded Item
-27. Select Scaffold Template
-In the Add Scaffold dialog, select:
-MVC Controller with views, using Entity Framework
-Click:
-Add
-28. Configure Scaffold
-In the next window, select:
-Model class
-Student
-Data context class
-StudentContext
-Controller name
-StudentsController
-Click:
-Add
+This creates the SQLite database:
 
-29. Files Created by Scaffolding
-After scaffolding, the following file will be created:
+```text
+students.db
+```
+
+---
+
+# 8. Create Controller
+
+Create:
+
+```text
 Controllers/StudentsController.cs
-The following folder will also be created:
-Views/Students
-Inside it, the following Views will be created:
-Views/Students
-│
-├── Create.cshtml
-├── Delete.cshtml
-├── Details.cshtml
-├── Edit.cshtml
-└── Index.cshtml
-Therefore, the complete important structure becomes:
-StudentCRUDApp
-│
-├── Controllers
-│ ├── HomeController.cs
-│ └── StudentsController.cs ← Created
-│
-├── Data
-│ └── StudentContext.cs ← Created
-│
-├── Models
-│ └── Student.cs ← Created
-│
-├── Migrations ← Created
-│ ├── InitialCreate.cs
-│ ├── InitialCreate.Designer.cs
-│ └── StudentContextModelSnapshot.cs
-│
-├── Views
-│ ├── Home
-│ ├── Shared
-│ │
-│ └── Students ← Created
-│ ├── Create.cshtml ← Created
-│ ├── Delete.cshtml ← Created
-│ ├── Details.cshtml ← Created
-│ ├── Edit.cshtml ← Created
-│ └── Index.cshtml ← Created
-│
-├── wwwroot
-│
-├── appsettings.json ← Modified
-├── Program.cs ← Modified
-└── StudentCRUDApp.csproj
+```
 
+### `StudentsController.cs`
+
+```csharp
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using StudentCRUDApp.Data;
-using StudentCRUDApp.Models;
-namespace StudentCRUDApp.Controllers
+using StudentCRUD.Data;
+using StudentCRUD.Models;
+
+namespace StudentCRUD.Controllers
 {
- public class StudentsController : Controller
- {
- private readonly StudentContext _context;
- public StudentsController(StudentContext context)
- {
- _context = context;
- }
- // READ
- public async Task<IActionResult> Index()
- {
- return View(await _context.Students.ToListAsync());
- }
- // READ - Details
- public async Task<IActionResult> Details(int? id)
- {
- if (id == null)
- {
- return NotFound();
- }
- var student = await _context.Students
- .FirstOrDefaultAsync(m => m.Id == id);
- if (student == null)
- {
- return NotFound();
- }
- return View(student);
- }
- // CREATE - GET
- public IActionResult Create()
- {
- return View();
- }
- // CREATE - POST
- [HttpPost]
- [ValidateAntiForgeryToken]
- public async Task<IActionResult> Create(Student student)
- {
- if (ModelState.IsValid)
- {
- _context.Add(student);
- await _context.SaveChangesAsync();
- return RedirectToAction(nameof(Index));
- }
- return View(student);
- }
- // EDIT - GET
- public async Task<IActionResult> Edit(int? id)
- {
- if (id == null)
- {
- return NotFound();
- }
- var student = await _context.Students.FindAsync(id);
- if (student == null)
- {
- return NotFound();
- }
- return View(student);
- }
- // EDIT - POST
- [HttpPost]
- [ValidateAntiForgeryToken]
- public async Task<IActionResult> Edit(int id, Student student)
- {
- if (id != student.Id)
- {
- return NotFound();
- }
- if (ModelState.IsValid)
- {
- _context.Update(student);
- await _context.SaveChangesAsync();
- return RedirectToAction(nameof(Index));
- }
- return View(student);
- }
- // DELETE - GET
- public async Task<IActionResult> Delete(int? id)
- {
- if (id == null)
- {
- return NotFound();
- }
- var student = await _context.Students
- .FirstOrDefaultAsync(m => m.Id == id);
- if (student == null)
- {
- return NotFound();
- }
- return View(student);
- }
- // DELETE - POST
- [HttpPost, ActionName("Delete")]
- [ValidateAntiForgeryToken]
- public async Task<IActionResult> DeleteConfirmed(int id)
- {
- var student = await _context.Students.FindAsync(id);
- if (student != null)
- {
- _context.Students.Remove(student);
- await _context.SaveChangesAsync();
- }
- return RedirectToAction(nameof(Index));
- }
- }
-}
+    public class StudentsController : Controller
+    {
+        private readonly ApplicationDbContext db;
 
+        public StudentsController(ApplicationDbContext db)
+        {
+            this.db = db;
+        }
 
-35. Index.cshtml
-The scaffolded Index.cshtml displays all student records.
-A simplified version is:
-@model IEnumerable<StudentCRUDApp.Models.Student>
-@{
- ViewData["Title"] = "Students";
+        // READ
+        public async Task<IActionResult> Index()
+        {
+            return View(await db.Students.ToListAsync());
+        }
+
+        // DETAILS
+        public async Task<IActionResult> Details(int id)
+        {
+            var student = await db.Students.FindAsync(id);
+
+            if (student == null)
+                return NotFound();
+
+            return View(student);
+        }
+
+        // CREATE
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Student student)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Students.Add(student);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            return View(student);
+        }
+
+        // UPDATE
+        public async Task<IActionResult> Edit(int id)
+        {
+            var student = await db.Students.FindAsync(id);
+
+            if (student == null)
+                return NotFound();
+
+            return View(student);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(Student student)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Students.Update(student);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            return View(student);
+        }
+
+        // DELETE
+        public async Task<IActionResult> Delete(int id)
+        {
+            var student = await db.Students.FindAsync(id);
+
+            if (student == null)
+                return NotFound();
+
+            db.Students.Remove(student);
+            await db.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+    }
 }
-<h1>Students</h1>
-<p>
- <a asp-action="Create" class="btn btn-primary">
- Add New Student
- </a>
-</p>
-<table class="table table-bordered">
- <thead>
- <tr>
- <th>Roll No</th>
- <th>Name</th>
- <th>Course</th>
- <th>Marks</th>
- <th>City</th>
- <th>Actions</th>
- </tr>
- </thead>
- <tbody>
- @foreach (var item in Model)
- {
- <tr>
- <td>
- @item.RollNo
- </td>
- <td>
- @item.Name
- </td>
- <td>
- @item.Course
- </td>
- <td>
- @item.Marks
- </td>
- <td>
- @item.City
- </td>
- <td>
- <a asp-action="Edit"
- asp-route-id="@item.Id">
- Edit
- </a> |
- <a asp-action="Details"
- asp-route-id="@item.Id">
- Details
- </a> |
- <a asp-action="Delete"
- asp-route-id="@item.Id">
- Delete
- </a>
- </td>
- </tr>
- }
- </tbody>
+```
+
+---
+
+# 9. Create Views
+
+Create this folder:
+
+```text
+Views/Students
+```
+
+Create these files:
+
+```text
+Index.cshtml
+Create.cshtml
+Edit.cshtml
+Details.cshtml
+```
+
+---
+
+## 10. `Index.cshtml`
+
+This displays all students.
+
+```html
+@model IEnumerable<StudentCRUD.Models.Student>
+
+<h2>Student List</h2>
+
+<a asp-action="Create">Add Student</a>
+
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Course</th>
+        <th>Actions</th>
+    </tr>
+
+@foreach (var s in Model)
+{
+    <tr>
+        <td>@s.Id</td>
+        <td>@s.Name</td>
+        <td>@s.Email</td>
+        <td>@s.Age</td>
+        <td>@s.Course</td>
+        <td>
+            <a asp-action="Details" asp-route-id="@s.Id">Details</a> |
+            <a asp-action="Edit" asp-route-id="@s.Id">Edit</a> |
+            <a asp-action="Delete" asp-route-id="@s.Id">Delete</a>
+        </td>
+    </tr>
+}
 </table>
+```
 
-36. Create.cshtml
-The Create.cshtml View provides a form for entering student data.
-The important part is:
-@model StudentCRUDApp.Models.Student
-@{
- ViewData["Title"] = "Create Student";
-}
-<h1>Create Student</h1>
+---
+
+# 11. `Create.cshtml`
+
+```html
+@model StudentCRUD.Models.Student
+
+<h2>Add Student</h2>
+
 <form asp-action="Create" method="post">
- <div class="form-group">
- <label asp-for="RollNo"></label>
- <input asp-for="RollNo" class="form-control" />
- <span asp-validation-for="RollNo"
- class="text-danger"></span>
- </div>
- <div class="form-group">
- <label asp-for="Name"></label>
- <input asp-for="Name" class="form-control" />
- <span asp-validation-for="Name"
- class="text-danger"></span>
- </div>
- <div class="form-group">
- <label asp-for="Course"></label>
- <input asp-for="Course" class="form-control" />
- <span asp-validation-for="Course"
- class="text-danger"></span>
- </div>
- <div class="form-group">
- <label asp-for="Marks"></label>
- <input asp-for="Marks" class="form-control" />
- <span asp-validation-for="Marks"
- class="text-danger"></span>
- </div>
- <div class="form-group">
- <label asp-for="City"></label>
- <input asp-for="City" class="form-control" />
- <span asp-validation-for="City"
- class="text-danger"></span>
- </div>
- <br />
- <button type="submit" class="btn btn-primary">
- Save
- </button>
- <a asp-action="Index"
- class="btn btn-secondary">
- Back
- </a>
-</form>
-37. Run the Application
-Step 14: Build the Application
-Select:
-Build
- ↓
-Build Solution
-or press:
-Ctrl + Shift + B
-Make sure there are no errors.
-38. Start the Application
-Press:
-Ctrl + F5
-or click:
-▶ Run
-The application opens in the browser.
-39. Open the Students Page
-Navigate to:
-/Students
-For example:
-https://localhost:7000/Students
 
+    Name:
+    <input asp-for="Name" />
+    <br><br>
+
+    Email:
+    <input asp-for="Email" />
+    <br><br>
+
+    Age:
+    <input asp-for="Age" />
+    <br><br>
+
+    Course:
+    <input asp-for="Course" />
+    <br><br>
+
+    <button type="submit">Save</button>
+
+</form>
+```
+
+---
+
+# 12. `Edit.cshtml`
+
+```html
+@model StudentCRUD.Models.Student
+
+<h2>Edit Student</h2>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    Name:
+    <input asp-for="Name" />
+    <br><br>
+
+    Email:
+    <input asp-for="Email" />
+    <br><br>
+
+    Age:
+    <input asp-for="Age" />
+    <br><br>
+
+    Course:
+    <input asp-for="Course" />
+    <br><br>
+
+    <button type="submit">Update</button>
+
+</form>
+```
+
+---
+
+# 13. `Details.cshtml`
+
+```html
+@model StudentCRUD.Models.Student
+
+<h2>Student Details</h2>
+
+<p>Id: @Model.Id</p>
+<p>Name: @Model.Name</p>
+<p>Email: @Model.Email</p>
+<p>Age: @Model.Age</p>
+<p>Course: @Model.Course</p>
+
+<a asp-action="Index">Back</a>
+```
+
+---
+
+# 14. Project Structure
+
+Your final project should look like:
+
+```text
+StudentCRUD
+│
+├── Controllers
+│   └── StudentsController.cs
+│
+├── Data
+│   └── ApplicationDbContext.cs
+│
+├── Models
+│   └── Student.cs
+│
+├── Views
+│   └── Students
+│       ├── Index.cshtml
+│       ├── Create.cshtml
+│       ├── Edit.cshtml
+│       └── Details.cshtml
+│
+├── appsettings.json
+├── Program.cs
+└── students.db
+```
+
+---
+
+# 15. Run the Application
+
+Press:
+
+```text
+Ctrl + F5
+```
+
+or click the **Run ▶ button** in Visual Studio.
+
+The application opens in the browser.
+
+The URL will be similar to:
+
+```text
+https://localhost:xxxx/Students
+```
+
+---
+
+# 16. CRUD Operations
+
+| Operation | Function |
+|---|---|
+| **Create** | Add a new student |
+| **Read** | Display all students |
+| **Update** | Edit student information |
+| **Delete** | Remove a student |
+| **Details** | Display complete student information |
+
+### Sample Output
+
+```text
+Student List
+
+---------------------------------------------------------
+Id   Name    Email             Age   Course    Actions
+---------------------------------------------------------
+1    Mahek   mahek@gmail.com   20    BCA       Details Edit Delete
+2    Rahul   rahul@gmail.com   21    BCA       Details Edit Delete
+---------------------------------------------------------
+
+                 Add Student
+```
+
+### Result
+
+**Thus, an ASP.NET Core MVC application for managing student records was successfully created using Entity Framework Core and SQLite, and CRUD operations were successfully performed.**
+
+### Important Viva Questions
+
+**1. What is CRUD?**  
+CRUD stands for **Create, Read, Update and Delete**.
+
+**2. What is MVC?**  
+MVC stands for **Model, View and Controller**.
+
+**3. What is Entity Framework Core?**  
+It is an ORM that allows .NET applications to work with databases using C# objects.
+
+**4. Why is SQLite used?**  
+SQLite is a lightweight database that stores data in a single database file.
+
+**5. What is Razor?**  
+Razor is a syntax used in ASP.NET Core to combine C# code with HTML in `.cshtml` views.
+
+**6. What does `DbSet<Student>` represent?**  
+It represents the **Students table** in the database.
+
+**7. What does `SaveChangesAsync()` do?**  
+It saves changes made to the database.
+
+**8. What is `Add-Migration`?**  
+It creates a migration containing changes to the database structure.
+
+Would you like a shorter handwritten exam version with only the essential files and commands?
