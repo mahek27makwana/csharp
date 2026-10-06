@@ -1,0 +1,105 @@
+Practical No. 10: Razor Pages and Tag Helpers
+Aim
+To create an ASP.NET Core Razor Pages application and demonstrate the use of Razor syntax and Tag Helpers to display and submit student information.
+Requirements
+- Visual Studio 2026
+- ASP.NET Core Razor Pages
+- C#
+1. Create Project
+Open Visual Studio 2026.
+Select:
+Create a new project → ASP.NET Core Web App
+Project Name:
+RazorApp
+
+Click Create.
+2. Create Student Model
+Create:
+Models/Student.cs
+
+namespace RazorApp.Models
+{
+    public class Student
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Course { get; set; }
+    }
+}
+
+3. Create Razor Page
+Open:
+Pages/Index.cshtml.cs
+
+Replace with:
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using RazorApp.Models;
+
+namespace RazorApp.Pages
+{
+    public class IndexModel : PageModel
+    {
+        [BindProperty]
+        public Student Student { get; set; }
+
+        public string Message { get; set; }
+
+        public void OnGet()
+        {
+        }
+
+        public void OnPost()
+        {
+            Message = "Student details submitted successfully!";
+        }
+    }
+}
+
+4. Create Razor View
+Open:
+Pages/Index.cshtml
+
+Write:
+@page
+@model RazorApp.Pages.IndexModel
+
+<h2>Student Details</h2>
+
+<form method="post">
+
+    <label asp-for="Student.Name"></label>
+    <input asp-for="Student.Name" />
+    <br><br>
+
+    <label asp-for="Student.Age"></label>
+    <input asp-for="Student.Age" />
+    <br><br>
+
+    <label asp-for="Student.Course"></label>
+    <input asp-for="Student.Course" />
+    <br><br>
+
+    <button type="submit">Submit</button>
+
+</form>
+
+@if (Model.Message != null)
+{
+    <h3>@Model.Message</h3>
+
+    <p>Name: @Model.Student.Name</p>
+    <p>Age: @Model.Student.Age</p>
+    <p>Course: @Model.Student.Course</p>
+}
+8. Project Structure
+RazorApp
+│
+├── Models
+│   └── Student.cs
+│
+├── Pages
+│   ├── Index.cshtml
+│   └── Index.cshtml.cs
+│
+└── Program.cs
