@@ -1,0 +1,136 @@
+Practical No. 8: Creating RESTful Services
+Aim
+To develop an ASP.NET Core Web API application to create a RESTful Student Service and perform CRUD operations using GET, POST, PUT, and DELETE methods. The APIs are tested using Swagger.
+Requirements
+- Visual Studio 2026
+- ASP.NET Core Web API
+- C#
+- Swagger / OpenAPI
+1. Create Web API Project
+Open Visual Studio 2026.
+Select:
+Create a new project → ASP.NET Core Web API
+Project Name:
+StudentAPI
+
+Select the latest available .NET version.
+Make sure:
+☑ Enable OpenAPI support
+☑ Use Controllers
+
+Click Create.
+2. Create Student Model
+Create:
+Models/Student.cs
+
+Student.cs
+namespace StudentAPI.Models
+{
+    public class Student
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Course { get; set; }
+    }
+}
+
+3. Create Student Controller
+Create:
+Controllers/StudentsController.cs
+
+StudentsController.cs
+using Microsoft.AspNetCore.Mvc;
+using StudentAPI.Models;
+
+namespace StudentAPI.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class StudentsController : ControllerBase
+    {
+        static List<Student> students = new List<Student>
+        {
+            new Student
+            {
+                Id = 1,
+                Name = "Mahek",
+                Email = "mahek@gmail.com",
+                Course = "BCA"
+            }
+        };
+
+        // GET: api/Students
+        [HttpGet]
+        public IActionResult GetStudents()
+        {
+            return Ok(students);
+        }
+
+        // GET: api/Students/1
+        [HttpGet("{id}")]
+        public IActionResult GetStudent(int id)
+        {
+            var student = students.FirstOrDefault(s => s.Id == id);
+
+            if (student == null)
+                return NotFound();
+
+            return Ok(student);
+        }
+
+        // POST: api/Students
+        [HttpPost]
+        public IActionResult AddStudent(Student student)
+        {
+            student.Id = students.Count + 1;
+            students.Add(student);
+
+            return Ok(student);
+        }
+
+        // PUT: api/Students/1
+        [HttpPut("{id}")]
+        public IActionResult UpdateStudent(int id, Student student)
+        {
+            var oldStudent = students.FirstOrDefault(s => s.Id == id);
+
+            if (oldStudent == null)
+                return NotFound();
+
+            oldStudent.Name = student.Name;
+            oldStudent.Email = student.Email;
+            oldStudent.Course = student.Course;
+
+            return Ok(oldStudent);
+        }
+
+        // DELETE: api/Students/1
+        [HttpDelete("{id}")]
+        public IActionResult DeleteStudent(int id)
+        {
+            var student = students.FirstOrDefault(s => s.Id == id);
+
+            if (student == null)
+                return NotFound();
+
+            students.Remove(student);
+
+            return Ok("Student deleted successfully");
+        }
+    }
+}
+
+4. Run the Application
+Press:
+Ctrl + F5
+
+Swagger will open automatically.
+You will see:
+Students
+
+GET     /api/Students
+GET     /api/Students/{id}
+POST    /api/Students
+PUT     /api/Students/{id}
+DELETE  /api/Students/{id}
