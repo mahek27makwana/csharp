@@ -1,0 +1,110 @@
+Practical No. 6: Web Application with Caching
+Aim
+To create an ASP.NET Core MVC web application that demonstrates caching to improve application performance.
+Requirements
+- Visual Studio 2026
+- ASP.NET Core MVC
+- C#
+- Memory Cache
+1. Create Project
+Open Visual Studio 2026.
+Select:
+Create a new project → ASP.NET Core Web App (Model-View-Controller)
+Project name:
+CachingApp
+
+Click Create.
+2. Configure Caching
+Open Program.cs and add:
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddMemoryCache();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.Run();
+
+Important Code
+builder.Services.AddMemoryCache();
+
+This enables in-memory caching.
+3. Create Controller
+Open:
+Controllers/HomeController.cs
+
+Replace the code with:
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+
+namespace CachingApp.Controllers
+{
+    public class HomeController : Controller
+    {
+        private readonly IMemoryCache cache;
+
+        public HomeController(IMemoryCache cache)
+        {
+            this.cache = cache;
+        }
+
+        public IActionResult Index()
+        {
+            string message;
+
+            if (!cache.TryGetValue("message", out message))
+            {
+                message = "Data created at: " + DateTime.Now;
+
+                cache.Set("message", message,
+                    TimeSpan.FromMinutes(5));
+            }
+
+            ViewBag.Message = message;
+
+            return View();
+        }
+    }
+}
+
+4. Create View
+Open:
+Views/Home/Index.cshtml
+
+Write:
+<h2>Caching Demonstration</h2>
+
+<p>@ViewBag.Message</p>
+
+<p>
+    Refresh the page. The cached time will remain the same
+    for 5 minutes.
+</p>
+
+5. Project Structure
+CachingApp
+│
+├── Controllers
+│   └── HomeController.cs
+│
+├── Views
+│   └── Home
+│       └── Index.cshtml
+│
+└── Program.cs
+
+6. Run the Application
+Press:
+Ctrl + F5
+
+or click the Run ▶ button.
