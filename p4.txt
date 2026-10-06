@@ -1,0 +1,290 @@
+# Practical No. 4: Creating Application Using Cart
+
+### Aim
+To create a simple **Shopping Cart web application** using ASP.NET Core MVC where users can view products, add products to the cart, and view the cart.
+
+### Requirements
+- Visual Studio 2026
+- ASP.NET Core MVC
+- C#
+- Razor Views
+
+---
+
+## 1. Create Project
+
+Open **Visual Studio 2026** → **Create a new project** → select:
+
+**ASP.NET Core Web App (Model-View-Controller)**
+
+Project name:
+
+```text
+ShoppingCart
+```
+
+Click **Create**.
+
+---
+
+## 2. Create Model
+
+Create:
+
+```text
+Models/Product.cs
+```
+
+### `Product.cs`
+
+```csharp
+namespace ShoppingCart.Models
+{
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double Price { get; set; }
+    }
+}
+```
+
+---
+
+# 3. Create Cart Controller
+
+Create:
+
+```text
+Controllers/CartController.cs
+```
+
+### `CartController.cs`
+
+```csharp
+using Microsoft.AspNetCore.Mvc;
+using ShoppingCart.Models;
+
+namespace ShoppingCart.Controllers
+{
+    public class CartController : Controller
+    {
+        static List<Product> products = new List<Product>
+        {
+            new Product { Id = 1, Name = "Laptop", Price = 50000 },
+            new Product { Id = 2, Name = "Mobile", Price = 20000 },
+            new Product { Id = 3, Name = "Headphones", Price = 2000 }
+        };
+
+        static List<Product> cart = new List<Product>();
+
+        public IActionResult Index()
+        {
+            return View(products);
+        }
+
+        public IActionResult Add(int id)
+        {
+            var product = products.FirstOrDefault(x => x.Id == id);
+
+            if (product != null)
+                cart.Add(product);
+
+            return RedirectToAction("Cart");
+        }
+
+        public IActionResult Cart()
+        {
+            return View(cart);
+        }
+
+        public IActionResult Remove(int id)
+        {
+            var product = cart.FirstOrDefault(x => x.Id == id);
+
+            if (product != null)
+                cart.Remove(product);
+
+            return RedirectToAction("Cart");
+        }
+    }
+}
+```
+
+---
+
+# 4. Create Product View
+
+Create folder:
+
+```text
+Views/Cart
+```
+
+Create:
+
+```text
+Views/Cart/Index.cshtml
+```
+
+### `Index.cshtml`
+
+```html
+@model List<ShoppingCart.Models.Product>
+
+<h2>Products</h2>
+
+@foreach (var p in Model)
+{
+    <p>
+        <b>@p.Name</b> - ₹@p.Price
+        <a asp-action="Add" asp-route-id="@p.Id">Add to Cart</a>
+    </p>
+}
+
+<a asp-action="Cart">View Cart</a>
+```
+
+---
+
+# 5. Create Cart View
+
+Create:
+
+```text
+Views/Cart/Cart.cshtml
+```
+
+### `Cart.cshtml`
+
+```html
+@model List<ShoppingCart.Models.Product>
+
+<h2>Shopping Cart</h2>
+
+@foreach (var p in Model)
+{
+    <p>
+        @p.Name - ₹@p.Price
+        <a asp-action="Remove" asp-route-id="@p.Id">Remove</a>
+    </p>
+}
+
+<h3>Total: ₹@Model.Sum(x => x.Price)</h3>
+
+<a asp-action="Index">Continue Shopping</a>
+```
+
+---
+
+# 6. Change `Program.cs`
+
+Open `Program.cs` and use:
+
+```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+app.UseStaticFiles();
+app.UseRouting();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Cart}/{action=Index}/{id?}");
+
+app.Run();
+```
+
+---
+
+# 7. Project Structure
+
+```text
+ShoppingCart
+│
+├── Controllers
+│   └── CartController.cs
+│
+├── Models
+│   └── Product.cs
+│
+├── Views
+│   └── Cart
+│       ├── Index.cshtml
+│       └── Cart.cshtml
+│
+└── Program.cs
+```
+
+---
+
+# 8. Run the Application
+
+Press:
+
+```text
+Ctrl + F5
+```
+
+or click the **Run ▶** button.
+
+The browser will show:
+
+```text
+Products
+
+Laptop - ₹50000       Add to Cart
+Mobile - ₹20000       Add to Cart
+Headphones - ₹2000    Add to Cart
+
+View Cart
+```
+
+After clicking **Add to Cart**:
+
+```text
+Shopping Cart
+
+Laptop - ₹50000       Remove
+Mobile - ₹20000       Remove
+
+Total: ₹70000
+
+Continue Shopping
+```
+
+---
+
+## Result
+
+**Thus, a simple Shopping Cart application was successfully created using ASP.NET Core MVC, allowing users to view products, add products to the cart, remove products, and calculate the total price.**
+
+### Viva Questions
+
+**1. What is a shopping cart?**  
+A shopping cart stores products selected by the user for purchase.
+
+**2. What is MVC?**  
+MVC stands for **Model, View and Controller**.
+
+**3. What is the Model used for?**  
+The Model represents the application's data.
+
+**4. What does `Add()` do?**  
+It adds the selected product to the cart.
+
+**5. What does `Remove()` do?**  
+It removes a product from the cart.
+
+**6. How is the total calculated?**
+
+```csharp
+Model.Sum(x => x.Price)
+```
+
+It adds the prices of all products in the cart.
+
+Would you like me to convert this into a shorter practical-record format with only the aim, code, result, and viva questions?
