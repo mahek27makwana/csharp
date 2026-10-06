@@ -1,11 +1,4 @@
 Practical No. 6: Web Application with Caching
-Aim
-To create an ASP.NET Core MVC web application that demonstrates caching to improve application performance.
-Requirements
-- Visual Studio 2026
-- ASP.NET Core MVC
-- C#
-- Memory Cache
 1. Create Project
 Open Visual Studio 2026.
 Select:
@@ -34,11 +27,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
-
-Important Code
-builder.Services.AddMemoryCache();
-
-This enables in-memory caching.
 3. Create Controller
 Open:
 Controllers/HomeController.cs
