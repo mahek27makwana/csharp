@@ -1,0 +1,165 @@
+Practical No. 9: Creating Applications with Controllers and Views using ASP.NET Core MVC
+Aim
+To create an ASP.NET Core MVC web application using a Controller and Views to display student information.
+Requirements
+- Visual Studio 2026
+- ASP.NET Core MVC
+- C#
+- Razor Views
+1. Create ASP.NET Core MVC Application
+Open Visual Studio 2026.
+Select:
+Create a new project → ASP.NET Core Web App (Model-View-Controller)
+Project Name:
+StudentMVC
+
+Click Create.
+2. Create Student Model
+Create:
+Models/Student.cs
+
+Student.cs
+namespace StudentMVC.Models
+{
+    public class Student
+    {
+        public string Name { get; set; }
+        public int Age { get; set; }
+        public string Course { get; set; }
+        public string Email { get; set; }
+    }
+}
+
+3. Create StudentController
+Create:
+Controllers/StudentController.cs
+
+StudentController.cs
+using Microsoft.AspNetCore.Mvc;
+using StudentMVC.Models;
+
+namespace StudentMVC.Controllers
+{
+    public class StudentController : Controller
+    {
+        public IActionResult Index()
+        {
+            var student = new Student
+            {
+                Name = "Mahek",
+                Age = 20,
+                Course = "BCA",
+                Email = "mahek@gmail.com"
+            };
+
+            return View(student);
+        }
+
+        public IActionResult Details()
+        {
+            var student = new Student
+            {
+                Name = "Mahek",
+                Age = 20,
+                Course = "BCA",
+                Email = "mahek@gmail.com"
+            };
+
+            return View(student);
+        }
+    }
+}
+
+4. Create Index View
+Create folder:
+Views/Student
+
+Create:
+Views/Student/Index.cshtml
+
+Index.cshtml
+@model StudentMVC.Models.Student
+
+<h2>Student Information</h2>
+
+<p><b>Name:</b> @Model.Name</p>
+<p><b>Age:</b> @Model.Age</p>
+<p><b>Course:</b> @Model.Course</p>
+<p><b>Email:</b> @Model.Email</p>
+
+<a asp-action="Details">View Details</a>
+
+5. Create Details View
+Create:
+Views/Student/Details.cshtml
+
+Details.cshtml
+@model StudentMVC.Models.Student
+
+<h2>Student Details</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Name</th>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        <th>Age</th>
+        <td>@Model.Age</td>
+    </tr>
+    <tr>
+        <th>Course</th>
+        <td>@Model.Course</td>
+    </tr>
+    <tr>
+        <th>Email</th>
+        <td>@Model.Email</td>
+    </tr>
+</table>
+
+<br>
+<a asp-action="Index">Back</a>
+
+6. Program.cs
+Make sure Program.cs contains:
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+
+var app = builder.Build();
+
+app.UseStaticFiles();
+app.UseRouting();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Student}/{action=Index}/{id?}");
+
+app.Run();
+
+The default page will now be:
+/Student/Index
+
+7. Project Structure
+StudentMVC
+│
+├── Controllers
+│   └── StudentController.cs
+│
+├── Models
+│   └── Student.cs
+│
+├── Views
+│   └── Student
+│       ├── Index.cshtml
+│       └── Details.cshtml
+│
+└── Program.cs
+
+8. Run the Application
+Press:
+Ctrl + F5
+
+or click Run ▶.
+Open:
+/Student/Index
