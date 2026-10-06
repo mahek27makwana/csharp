@@ -1,11 +1,4 @@
 Practical No. 9: Creating Applications with Controllers and Views using ASP.NET Core MVC
-Aim
-To create an ASP.NET Core MVC web application using a Controller and Views to display student information.
-Requirements
-- Visual Studio 2026
-- ASP.NET Core MVC
-- C#
-- Razor Views
 1. Create ASP.NET Core MVC Application
 Open Visual Studio 2026.
 Select:
